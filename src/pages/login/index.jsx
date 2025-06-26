@@ -134,7 +134,7 @@ const FormContainer = styled.div`
     background: #272727;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 5rem;
 `
 
@@ -159,9 +159,9 @@ const WelcomeContainer = styled.div`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 2.5rem;
     width: 100%;
-    height: 100%;
 `;
 
 export default function Login() {
@@ -179,9 +179,6 @@ export default function Login() {
                     <PasswordInput type="password" placeholder="Password" required />
                     <SubmitContainer>
                         <SubmitButton type="submit">SUBMIT</SubmitButton>
-                        <AltSignText>
-                            Already have an account? <a href="/login">Login</a>
-                        </AltSignText>
                     </SubmitContainer>
                 </Form>
             </FormContainer>

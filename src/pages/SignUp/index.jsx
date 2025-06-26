@@ -134,7 +134,7 @@ const FormContainer = styled.div`
     background: #272727;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 5rem;
 `
 
@@ -159,12 +159,12 @@ const WelcomeContainer = styled.div`
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    justify-content: center;
     gap: 2.5rem;
     width: 100%;
+    height: 100%;
 `;
 
-export default function Signup() {
+export default function Login() {
     return (
         <Container>
             <BackgroundImage />
@@ -175,10 +175,15 @@ export default function Signup() {
                     <p>Let’s sign you up quickly</p>
                 </WelcomeContainer>
                 <Form>
+                    <StyledInput type="email" placeholder="Username" required />
                     <StyledInput type="email" placeholder="Email" required />
                     <PasswordInput type="password" placeholder="Password" required />
+                    <PasswordInput type="password" placeholder="Confirm Password" required />
                     <SubmitContainer>
                         <SubmitButton type="submit">SUBMIT</SubmitButton>
+                        <AltSignText>
+                            Already have an account? <a href="/login">Login</a>
+                        </AltSignText>
                     </SubmitContainer>
                 </Form>
             </FormContainer>
