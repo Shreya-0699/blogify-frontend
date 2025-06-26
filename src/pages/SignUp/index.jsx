@@ -1,6 +1,7 @@
 import sideBackground from '@/assets/side-background.png';
-// import { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
+import Snackbar from '../../components/Snackbar';
 
 const Container = styled.div`
     display: flex;
@@ -156,7 +157,7 @@ const WelcomeContainer = styled.div`
     }
 `;
 
-const Form = styled.form`
+const Form = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -165,6 +166,15 @@ const Form = styled.form`
 `;
 
 export default function Login() {
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Here you would typically handle the form submission, e.g., send data to an API
+        setMessage('Form submitted successfully!');
+        // Reset the form or perform other actions as needed
+        e.target.reset();
+    };
     return (
         <Container>
             <BackgroundImage />
@@ -180,13 +190,14 @@ export default function Login() {
                     <PasswordInput type="password" placeholder="Password" required />
                     <PasswordInput type="password" placeholder="Confirm Password" required />
                     <SubmitContainer>
-                        <SubmitButton type="submit">SUBMIT</SubmitButton>
+                        <SubmitButton onClick={handleSubmit} type="submit">SUBMIT</SubmitButton>
                         <AltSignText>
                             Already have an account? <a href="/login">Login</a>
                         </AltSignText>
                     </SubmitContainer>
                 </Form>
             </FormContainer>
+            <Snackbar message={message} duration={3000} position="top-right" />
         </Container>
     )
 }
