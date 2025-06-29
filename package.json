@@ -10,7 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blocknote/core": "^0.32.0",
+    "@blocknote/mantine": "^0.32.0",
+    "@blocknote/react": "^0.32.0",
+    "axios": "^1.10.0",
     "react": "^19.1.0",
+    "react-cookie": "^8.0.1",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "styled-components": "^6.1.19"

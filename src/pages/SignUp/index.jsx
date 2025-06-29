@@ -2,6 +2,8 @@ import sideBackground from "@/assets/side-background.png";
 import { useState } from "react";
 import styled from "styled-components";
 import Snackbar from "../../components/Snackbar";
+import { apiInstance } from "../../api/apiInstance";
+import { useCookies } from "react-cookie";
 
 const Container = styled.div`
   display: flex;
@@ -153,7 +155,7 @@ const WelcomeContainer = styled.div`
   }
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
@@ -161,30 +163,102 @@ const Form = styled.div`
   height: 100%;
 `;
 
-export default function Login() {
+export default function SignUp() {
+  const [, setCookie] = useCookies();
   const [message, setMessage] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (userInfo.username.length < 3) {
+      setMessage("Username must be at least 3 characters long!");
+      return;
+    }
+    if (!userInfo.email.includes("@")) {
+      setMessage("Please enter a valid email address!");
+      return;
+    }
+    if (
+      userInfo.password !== userInfo.confirmPassword ||
+      userInfo.password.length < 8
+    ) {
+      setMessage("Passwords do not match or are too short!");
+      return;
+    }
+
+    const response = await apiInstance.post("/user/registration", {
+      username: userInfo.username,
+      email: userInfo.email,
+      password: userInfo.password,
+      confirmPassword: userInfo.confirmPassword,
+    });
+
+    if (response.status !== 200) {
+      setMessage("Error signing up. Please try again.");
+      return;
+    }
+    console.log(response.data);
+    setCookie("token", response.data.token, { path: "/" });
+    setCookie(
+      "user",
+      JSON.stringify({
+        username: response.data.username,
+        email: response.data.email,
+        id: response.data._id,
+      }),
+      { path: "/" }
+    );
     // Here you would typically handle the form submission, e.g., send data to an API
-    setMessage("Form submitted successfully!");
+    setMessage("Registration successfully!");
     // Reset the form or perform other actions as needed
-    e.target.reset();
   };
   return (
     <Container>
       <BackgroundImage />
       <GreenLine />
-      <FormContainer>
+      <FormContainer onSubmit={handleSubmit}>
         <WelcomeContainer>
           <h1>Welcome</h1>
           <p>Let’s sign you up quickly</p>
         </WelcomeContainer>
         <Form>
-          <StyledInput type="email" placeholder="Username" required />
-          <StyledInput type="email" placeholder="Email" required />
-          <PasswordInput type="password" placeholder="Password" required />
+          <StyledInput
+            value={userInfo.username}
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, username: e.target.value })
+            }
+            type="email"
+            placeholder="Username"
+            required
+          />
+          <StyledInput
+            onChange={(e) =>
+              setUserInfo({ ...userInfo, email: e.target.value })
+            }
+            type="email"
+            value={userInfo.email}
+            placeholder="Email"
+            required
+          />
           <PasswordInput
+            onChange={(e) => {
+              setUserInfo({ ...userInfo, password: e.target.value });
+            }}
+            value={userInfo.password}
+            type="password"
+            placeholder="Password"
+            required
+          />
+          <PasswordInput
+            onChange={(e) => {
+              setUserInfo({ ...userInfo, confirmPassword: e.target.value });
+            }}
+            value={userInfo.confirmPassword}
             type="password"
             placeholder="Confirm Password"
             required
@@ -199,12 +273,7 @@ export default function Login() {
           </SubmitContainer>
         </Form>
       </FormContainer>
-      <Snackbar
-        message={message}
-        duration={3000}
-        position="top-right"
-        title={"SUCCESS"}
-      />
+      <Snackbar message={message} duration={3000} position="top-right" />
     </Container>
   );
 }
