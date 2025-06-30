@@ -38,6 +38,7 @@ const AuthProvider = ({ children }) => {
     removeCookie("token", { path: "/" });
     removeCookie("user", { path: "/" });
   };
+  // if token is not provided or undefined or null or empty string
   const isAuthenticated = !!token;
 
   // Check authentication status on mount
