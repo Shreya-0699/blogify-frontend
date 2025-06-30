@@ -7,6 +7,7 @@ import Login from "./pages/login";
 import CreateBlog from "./pages/CreateBlog";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Blog from "./pages/Blog";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
           <ProtectedRoute path="/create-blog" component={<CreateBlog />} />
         }
       />
+      <Route path="/blog" element={<Blog />} />
       <Route path="/" element={<Signup />} />
       <Route path="/login" element={<Login />} />
     </Routes>
