@@ -4,7 +4,7 @@ import styled from "styled-components";
 const BlogContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 80%;
   gap: 1.7rem;
@@ -13,6 +13,9 @@ const BlogContainer = styled.div`
 const BlogMetaLeft = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
 `;
 
 const BlogDate = styled.div`
@@ -27,8 +30,12 @@ const BlogDate = styled.div`
 `;
 
 const BlogUser = styled.div`
+margin-top: 4rem;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   p {
     font-size: 1.6rem;
     font-family: "Lexend Deca";
@@ -76,7 +83,7 @@ export default function BlogMeta() {
       </BlogMetaLeft>
       <BlogMetaRight>
         <BlogTitle>{tempTitle}</BlogTitle>
-        <BlogText>{tempText}</BlogText>
+        <BlogText>{tempText.substring(0, 500)}</BlogText>
       </BlogMetaRight>
     </BlogContainer>
   );

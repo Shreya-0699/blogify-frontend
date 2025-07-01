@@ -23,6 +23,7 @@ const SideBarContainer = styled.div`
   width: 9.5rem;
   height: 100vh;
   border-right: 0.3rem solid #6eeb83;
+  padding: 1rem 1rem;
 `;
 
 const SidebarTop = styled.div`
@@ -114,6 +115,7 @@ const MainContentContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   min-width: 90%;
+  height: 100vh;
 `;
 
 const StyledInput = styled.input`
@@ -125,12 +127,13 @@ const StyledInput = styled.input`
   /* padding: 0.75rem 1rem; */
   border-radius: 0px;
   font-size: 1rem;
-  width: 100%;
+  width: 80%;
   height: 6.7rem;
   font-size: 1.8rem;
   padding-left: 3.5rem;
   padding-top: 2.2rem;
   padding-bottom: 2.5rem;
+  margin-top: 5rem;
   &::placeholder {
     font-size: 1.8rem;
     /* padding-left: 2.5rem; */
@@ -146,7 +149,24 @@ const StyledInput = styled.input`
   }
 `;
 
-const BlogContainer = styled.div``;
+const BlogContainer = styled.div`
+  padding-top: 15rem;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7rem;
+  top: 20rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+`;
+
+const InputContainer = styled.div`
+  height: 20rem;
+  width: 80%;
+`
 
 export default function Blog() {
   const searchInputRef = useRef(null);
@@ -181,6 +201,18 @@ export default function Blog() {
           required
         />
         <BlogContainer>
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
+          <BlogMeta />{" "}
           <BlogMeta />{" "}
         </BlogContainer>
       </MainContentContainer>
