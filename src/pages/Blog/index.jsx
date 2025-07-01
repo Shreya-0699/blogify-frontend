@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import searchIcon from "../../assets/search.png";
 import addCircleIcon from "../../assets/add_circle.png";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import BlogMeta from "../../components/BlogMeta";
+import { useCreateBlockNote } from "@blocknote/react";
+import { apiInstance } from "../../api/apiInstance";
 
 const PageContainer = styled.div`
   display: flex;
@@ -169,7 +171,40 @@ const InputContainer = styled.div`
 `
 
 export default function Blog() {
+
+  const editor = useCreateBlockNote();
+  const [blogTextArray, setBlogTextArray] = useState([]);
   const searchInputRef = useRef(null);
+  const blogT = "[\n  {\n    \"id\": \"70e43fd8-af31-40a4-b7fa-c7514306621d\",\n    \"type\": \"paragraph\",\n    \"props\": {\n      \"textColor\": \"default\",\n      \"backgroundColor\": \"default\",\n      \"textAlignment\": \"left\"\n    },\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"Welcome to this demo!\",\n        \"styles\": {}\n      }\n    ],\n    \"children\": []\n  },\n  {\n    \"id\": \"b2d3abea-8f94-462e-a7aa-c4e0ac07eadf\",\n    \"type\": \"heading\",\n    \"props\": {\n      \"textColor\": \"default\",\n      \"backgroundColor\": \"default\",\n      \"textAlignment\": \"left\",\n      \"level\": 1,\n      \"isToggleable\": false\n    },\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"This is a sadsadsheading block\",\n        \"styles\": {}\n      }\n    ],\n    \"children\": []\n  },\n  {\n    \"id\": \"405a0cd3-de23-4e52-b938-63695253b51a\",\n    \"type\": \"paragraph\",\n    \"props\": {\n      \"textColor\": \"default\",\n      \"backgroundColor\": \"default\",\n      \"textAlignment\": \"left\"\n    },\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"This is a paragraph block\",\n        \"styles\": {}\n      }\n    ],\n    \"children\": []\n  },\n  {\n    \"id\": \"062031a2-52b5-4a8a-8899-fb523e51e8a5\",\n    \"type\": \"paragraph\",\n    \"props\": {\n      \"textColor\": \"default\",\n      \"backgroundColor\": \"default\",\n      \"textAlignment\": \"left\"\n    },\n    \"content\": [],\n    \"children\": []\n  }\n]"
+  
+    function extractPlainTextFromBlockNote(data) {
+    return data
+      .map(block => {
+        return block.content?.map(span => span.text).join('') || '';
+      })
+      .join('. '); // add newlines between blocks if needed
+  }
+
+  const getAllBlogs = async () => {
+    try {
+      const blogs = await apiInstance.get("/blog/");
+      setBlogTextArray([...blogs.data.data.blogs].map(blog => {
+        return {...blogs, shortContent: extractPlainTextFromBlockNote(JSON.parse(blog.body))}
+      }));
+      return blogs;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  useEffect(() => {
+    const blogContent = extractPlainTextFromBlockNote(JSON.parse(blogT));
+    getAllBlogs()
+    console.log(blogContent);
+    setBlogText(blogContent);
+  }, []);
+  
   return (
     <PageContainer>
       <SideBarContainer>
@@ -201,19 +236,7 @@ export default function Blog() {
           required
         />
         <BlogContainer>
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
-          <BlogMeta />{" "}
+          {blogTextArray.map((blogData) => (<BlogMeta blogText={blogData.shortContent} title={blogData.title} username={"kevaldave"} />))}
         </BlogContainer>
       </MainContentContainer>
     </PageContainer>
