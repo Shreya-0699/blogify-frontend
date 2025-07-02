@@ -3,6 +3,9 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import styled from "styled-components";
+import { apiInstance } from "../../api/apiInstance";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Your upload function: accepts only images and encodes to base64
 const uploadFile = async (file) => {
@@ -125,8 +128,39 @@ const Heading = styled.h1`
   margin-bottom: 1.5rem;
   text-align: center;
 `;
+const TitleInput = styled.input`
+  background-color: transparent;
+  border: 1px solid #6eeb83;
+  color: white;
+  /* padding: 0.75rem 1rem; */
+  border-radius: 0px;
+  font-size: 1rem;
+  width: 100%;
+  height: 6.7rem;
+  font-size: 1.8rem;
+  padding-left: 3.5rem;
+  padding-top: 2.2rem;
+  padding-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  &::placeholder {
+    font-size: 1.8rem;
+    /* padding-left: 2.5rem; */
+    padding-top: 2.2rem;
+    padding-bottom: 2.5rem;
+    color: #a5a5a5;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #4ac26b;
+    box-shadow: 0 0 0 2px rgba(110, 235, 131, 0.3);
+  }
+`;
 
 export default function CreateBlog() {
+  const [message, setMessage] = useState("");
+  const [title, setTitle] = useState("");
+  const navigate = useNavigate();
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
     uploadFile,
@@ -138,14 +172,56 @@ export default function CreateBlog() {
 
   console.log("ENVs", import.meta.env.VITE_BLOGIFY_SERVICE_URL);
 
+  function extractPlainTextFromBlockNote(data) {
+    return data
+      .map((block) => {
+        return block.content?.map((span) => span.text).join("") || "";
+      })
+      .join(". ")
+      .substring(0, 500); // add newlines between blocks if needed
+  }
+
+  const handleSubmit = async (isPublished = false) => {
+    try {
+      const slug = title.replaceAll(" ", "-").toLowerCase();
+      const content = editor.document;
+      const description = extractPlainTextFromBlockNote(content);
+
+      const submitBlog = await apiInstance.post("/blog/create", {
+        title,
+        body: content,
+        slug,
+        description,
+        isPublished,
+      });
+
+      if (submitBlog.status !== 200) {
+        setMessage("Error while saving blog");
+      }
+
+      setMessage("Blog saved successfully");
+      navigate("/blog");
+    } catch (error) {
+      setMessage("Error while saving blog");
+    }
+  };
+
   // Renders the editor instance using a React component.
   return (
     <CreateBlogContainer>
       <Heading>Create a New Blog</Heading>
+      <TitleInput
+        placeholder="title"
+        value={title}
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+      />
       <BlockNoteView editor={editor} />
       <ButtonContainer>
         <SaveAsDraftButton
           onClick={() => {
+            handleSubmit();
             // Logic to save as draft
             console.log("Saving as draft...");
           }}
@@ -154,6 +230,8 @@ export default function CreateBlog() {
         </SaveAsDraftButton>
         <PublishButton
           onClick={() => {
+            handleSubmit(true);
+            console.log(editor.document);
             // Logic to publish the blog
             console.log("Publishing the blog...");
           }}
