@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import BlogMeta from "../../components/BlogMeta";
 import { useCreateBlockNote } from "@blocknote/react";
 import { apiInstance } from "../../api/apiInstance";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 const PageContainer = styled.div`
   display: flex;
@@ -171,7 +172,7 @@ const InputContainer = styled.div`
 `;
 
 export default function Blog() {
-  const editor = useCreateBlockNote();
+  const navigate = useNavigate();
   const [blogTextArray, setBlogTextArray] = useState([]);
   const searchInputRef = useRef(null);
   const blogT =
@@ -250,6 +251,12 @@ export default function Blog() {
         <BlogContainer>
           {blogTextArray.map((blogData) => (
             <BlogMeta
+              redirect={() => {
+                navigate({
+                  pathname: "/view-blog",
+                  search: `?${createSearchParams({ id: blogData._id })}`,
+                });
+              }}
               blogText={blogData.shortContent}
               title={blogData.title}
               username={"kevaldave"}

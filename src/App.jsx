@@ -8,6 +8,7 @@ import CreateBlog from "./pages/CreateBlog";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Blog from "./pages/Blog";
+import ViewBlog from "./pages/ViewBlog";
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -23,6 +24,7 @@ function App() {
       <Route path="/blog" element={<Blog />} />
       <Route path="/" element={<Signup />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/view-blog" element={<ViewBlog />} />
     </Routes>
   );
 }
