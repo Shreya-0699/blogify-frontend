@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { apiInstance } from "../../api/apiInstance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Snackbar from "../../components/Snackbar";
 
 // Your upload function: accepts only images and encodes to base64
 const uploadFile = async (file) => {
@@ -202,6 +203,7 @@ export default function CreateBlog() {
       setMessage("Blog saved successfully");
       navigate("/blog");
     } catch (error) {
+      console.log(error);
       setMessage("Error while saving blog");
     }
   };
@@ -239,6 +241,7 @@ export default function CreateBlog() {
           Publish
         </PublishButton>
       </ButtonContainer>
+      <Snackbar message={message} duration={3000} position="top-right" />
     </CreateBlogContainer>
   );
 }
